@@ -32,7 +32,7 @@ describe('rc-switch', () => {
   });
 
   it('should change from an initial checked state of true to false on click', () => {
-    const wrapper = mount(<Switch defaultChecked/>);
+    const wrapper = mount(<Switch defaultChecked />);
     expect(wrapper.state().checked).toBe(true);
     wrapper.simulate('click');
     expect(wrapper.state().checked).toBe(false);
@@ -51,10 +51,32 @@ describe('rc-switch', () => {
 
   it('should not toggle when clicked in a disabled state', () => {
     const onChange = jest.fn();
-    const wrapper = mount(<Switch disabled checked onChange={onChange}/>);
+    const wrapper = mount(<Switch disabled checked onChange={onChange} />);
     expect(wrapper.state().checked).toBe(true);
     wrapper.simulate('click');
     expect(wrapper.state().checked).toBe(true);
     expect(onChange.mock.calls.length).toBe(0);
+  });
+
+  it('should have equal children when pass children by own api or React\'s children', () => {
+    const components = [
+      <Switch prefixCls="test" checkedChildren="开" unCheckedChildren="关" />,
+      <Switch prefixCls="test">
+        {checked => (checked ? '开' : '关')}
+      </Switch>
+    ];
+
+    components.forEach(component => {
+      const onChange = jest.fn();
+      const wrapper = mount(component);
+      const innerWrapper = wrapper.find('.test-inner');
+      expect(innerWrapper.html().trim()).toEqual(
+        `<span class=\"test-inner\">关</span>`
+      );
+      wrapper.simulate('click');
+      expect(innerWrapper.html().trim()).toEqual(
+        `<span class=\"test-inner\">开</span>`
+      );
+    });
   });
 });

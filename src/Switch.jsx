@@ -66,8 +66,8 @@ class Switch extends Component {
   }
 
   render() {
-    const { className, prefixCls, disabled,
-      checkedChildren, tabIndex, unCheckedChildren, ...restProps } = this.props;
+    const { className, prefixCls, disabled, tabIndex, children,
+      checkedChildren, unCheckedChildren, ...restProps } = this.props;
     const checked = this.state.checked;
     const switchTabIndex = disabled ? -1 : (tabIndex || 0);
     const switchClassName = classNames({
@@ -87,7 +87,9 @@ class Switch extends Component {
         onMouseUp={this.handleMouseUp}
       >
         <span className={`${prefixCls}-inner`}>
-          {checked ? checkedChildren : unCheckedChildren}
+          {children
+            ? children(checked)
+            : checked ? checkedChildren : unCheckedChildren}
         </span>
       </span>
     );
@@ -100,6 +102,7 @@ Switch.propTypes = {
   disabled: PropTypes.bool,
   checkedChildren: PropTypes.any,
   unCheckedChildren: PropTypes.any,
+  children: PropTypes.func,
   onChange: PropTypes.func,
   onMouseUp: PropTypes.func,
   onClick: PropTypes.func,
